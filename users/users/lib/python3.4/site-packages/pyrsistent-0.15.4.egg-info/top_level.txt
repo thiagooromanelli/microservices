@@ -1,0 +1,3 @@
+pyrsistent
+_pyrsistent_version
+pvectorc

@@ -1,0 +1,149 @@
+swagger: "2.0"
+info:
+  description: Swagger file
+  version: "1.0.0"
+  title: Swagger ReST Filmes
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /api
+
+paths:
+  /movies:
+    get:
+      operationId: movies.read_all
+      tags:
+        - Filmes
+      summary: Lista de Filmes
+      description: Lista de Filmes
+      responses:
+        200:
+          description: Sucesso na leitura de Filmes
+          schema:
+            type: array
+            items:
+              properties:
+                movie_name:
+                  type: string
+                details:
+                  type: string
+                genre:
+                  type: string
+                viwes:
+                  type: integer
+                keyword:
+                  type: array
+                timestamp:
+                  type: string
+
+    post:
+      operationId: movies.create
+      tags:
+        - Filmes
+      summary: Cria um filme e adiciona na lista de Filmes
+      description: Adiciona na lista de Filmes
+      parameters:
+        - name: movie
+          in: body
+          description: Filme a ser criado
+          required: True
+          schema:
+            type: object
+            properties:
+              movie_name:
+                type: string
+                description: Nome do filme
+              details:
+                type: string
+                description: Detalhes do filme
+              genre:
+                type: string
+                description: Genero do filme
+              viwes:
+                type: integer
+                description: Visualizaçoes do filme
+              keyword:
+                type: array
+                description: Palavras-chave do filme
+      responses:
+        201:
+          description: Sucesso ao criar filme
+
+  /movies/{movie_name}:
+    get:
+      operationId: movies.read_one
+      tags:
+        - Filmes
+      summary: Leitura de um filme da lista de Filmes
+      description: Leitura de um filme
+      parameters:
+        - name: movie_name
+          in: path
+          description: Nome do filme
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso na leitura de um filme
+          schema:
+            properties:
+              movie_name:
+                type: string
+              details:
+                type: string
+              genre:
+                type: string
+              viwes:
+                type: integer
+              keyword:
+                type: array
+              timestamp:
+                type: string
+
+    put:
+      operationId: movies.update
+      tags:
+        - Filmes
+      summary: Update na lista de Filmes
+      description: Update na lista
+      parameters:
+        - name: movie_name
+          in: path
+          description: Nome do filme
+          type: string
+          required: True
+        - name: movie
+          in: body
+          schema:
+            type: object
+            properties:
+              movie_name:
+                type: string
+              details:
+                type: string
+              genre:
+                type: string
+              viwes:
+                type: integer
+              keyword:
+                type: array
+      responses:
+        200:
+          description: Sucesso ao atualizar filme
+
+    delete:
+      operationId: movies.delete
+      tags:
+        - Filmes
+      summary: Deletar um filme na lista de Filmes
+      description: Deleta um filme
+      parameters:
+        - name: movie_name
+          in: path
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso ao deletar filme
