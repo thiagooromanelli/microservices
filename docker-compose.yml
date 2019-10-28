@@ -1,15 +1,18 @@
 version: '3'
 services:
-  kafka:
-    image: spotify/kafka
-    container_name: kafka
-    network_mode: "host"
-    ports:
-      - 9092:9092
-      - 2181:2181
-    environment:
-      - "ADVERTISED_HOST=0.0.0.0"
-      - "ADVERTISED_PORT=9092"
+  # kafka:
+  #   image: spotify/kafka
+  #   container_name: kafka
+  #   network_mode: "host"
+  #   ports:
+  #     - 9092:9092
+  #     - 2181:2181
+  #   environment:
+  #     - "ADVERTISED_HOST=0.0.0.0"
+  #     - "ADVERTISED_PORT=9092"
+  #   command: > 
+  #     bash -c "./opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 0.0.0.0:9092 --topic movies --from-beginning &&
+  #            ./opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 0.0.0.0:9092 --topic users --from-beginning"
 
   mongodb:
     image: mongo:latest
@@ -27,27 +30,27 @@ services:
       - 5000:5000
     restart: on-failure
     depends_on:
-      - kafka
+      # - kafka
       - mongodb
 
-  # serviceDesk:
-  #   image: thiagoromanelli/serviceDesk:latest
-  #   container_name: serviceDesk
-  #   network_mode: "host"
-  #   ports:
-  #     - 5001:5001
-  #   restart: on-failure
-  #   depends_on:
-  #     - kafka
-  #     - mongodb
+  servicedesk:
+    image: thiagoromanelli/servicedesk:latest
+    container_name: servicedesk
+    network_mode: "host"
+    ports:
+      - 5001:5001
+    restart: on-failure
+    depends_on:
+      # - kafka
+      - mongodb
 
-  # users:
-  #   image: thiagoromanelli/users:latest
-  #   container_name: users
-  #   network_mode: "host"
-  #   ports:
-  #     - 5002:5002
-  #   restart: on-failure
-  #   depends_on:
-  #     - kafka
-  #     - mongodb
+  users:
+    image: thiagoromanelli/users:latest
+    container_name: users
+    network_mode: "host"
+    ports:
+      - 5002:5002
+    restart: on-failure
+    depends_on:
+      # - kafka
+      - mongodb
