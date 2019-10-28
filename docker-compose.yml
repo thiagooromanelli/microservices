@@ -14,6 +14,30 @@ services:
   #     bash -c "./opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 0.0.0.0:9092 --topic movies --from-beginning &&
   #            ./opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 0.0.0.0:9092 --topic users --from-beginning"
 
+  consul:
+    image: consul:latest
+    container_name: consul
+    network_mode: "host"
+    ports:
+      - 8500:8500 
+      - 8600:8600/udp 
+    command: agent -dev -bind=127.0.0.1 -ui -datacenter=zone1 -node=server-1 -bootstrap-expect=1 -client=0.0.0.0
+    restart: on-failure
+
+    # Register services
+    # docker exec consul /bin/sh -c "echo '{\"service\": {\"name\": \"users\", \"tags\": [\"users\"], \"port\": 5001}}' >> /consul/config/users.json"
+    # docker exec consul /bin/sh -c "echo '{\"service\": {\"name\": \"servicedesk\", \"tags\": [\"servicedesk\"], \"port\": 5002}}' >> /consul/config/servicedesk.json"
+    # docker exec consul /bin/sh -c "echo '{\"service\": {\"name\": \"movies\", \"tags\": [\"movies\"], \"port\": 5000}}' >> /consul/config/movies.json"
+    # docker exec consul consul reload
+
+  consul-counting-service:
+    image: hashicorp/counting-service:0.0.2
+    container_name: consul-counting-service
+    network_mode: "host"
+    ports:
+      - 9001:9001 
+    restart: on-failure
+
   mongodb:
     image: mongo:latest
     container_name: mongodb

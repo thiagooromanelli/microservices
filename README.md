@@ -44,3 +44,15 @@ Para teste foi utilizado uma imagem do Kafka baixada do DockerHub. Para funciona
 ```
 
 Apos isso pode-se utilizar o docker-compose.yml presente neste repositorio para iniciar os microservices e o MongoDB devidamente configurados.
+
+Tambem usou-se o Consul para Service Discovery. Esta configurado dentro do docker-compose.yml e inicia junto com os outros servicos.
+Apos inicio do container deve-se registrar os servicos no Consul com os seguintes comandos:
+
+```
+// Register services
+> docker exec consul /bin/sh -c "echo '{\"service\": {\"name\": \"users\", \"tags\": [\"users\"], \"port\": 5001}}' >> /consul/config/users.json"
+> docker exec consul /bin/sh -c "echo '{\"service\": {\"name\": \"servicedesk\", \"tags\": [\"servicedesk\"], \"port\": 5002}}' >> /consul/config/servicedesk.json"
+> docker exec consul /bin/sh -c "echo '{\"service\": {\"name\": \"movies\", \"tags\": [\"movies\"], \"port\": 5000}}' >> /consul/config/movies.json"
+// Aplicar as configuracoes
+> docker exec consul consul reload
+```
