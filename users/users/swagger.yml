@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   description: Swagger file
   version: "1.0.0"
-  title: Swagger ReST Clientes
+  title: Swagger ReST Users
 consumes:
   - application/json
 produces:
@@ -11,113 +11,241 @@ produces:
 basePath: /api
 
 paths:
-  /clientes:
+  /users:
     get:
-      operationId: clientes.read_all
+      operationId: users.read_all
       tags:
-        - Clientes
-      summary: Lista de Clientes
-      description: Lista de Clientes
+        - Users
+      summary: Lista de Usuarios
+      description: Lista de Usuario
       responses:
         200:
-          description: Sucesso na leitura de Clientes
+          description: Sucesso na leitura de Usuario
           schema:
             type: array
             items:
               properties:
-                fname:
+                login:
                   type: string
-                lname:
+                password:
                   type: string
+                name:
+                  type: string
+                liked:
+                  type: array
+                  items:
+                    type: string
+                to_watch:
+                  type: array
+                  items:
+                    type: string
+                watched:
+                  type: array
+                  items:
+                    type: string
                 timestamp:
                   type: string
 
-
     post:
-      operationId: clientes.create
+      operationId: users.create
       tags:
-        - Clientes
-      summary: Cria uma pessoa e adiciona na lista de Clientes
-      description: Adiciona na lista de Clientes
+        - Users
+      summary: Cria um usuario e adiciona na lista de Usuarios
+      description: Adiciona na lista de Usuarios
       parameters:
-        - name: person
+        - name: user
           in: body
-          description: Pessoa a ser criada
+          description: Usuario a ser criado
           required: True
           schema:
             type: object
             properties:
-              fname:
+              login:
                 type: string
-                description: Primeiro nome
-              lname:
+                description: Login do usuario
+              password:
                 type: string
-                description: Ultimo nome
+                description: Senha do usuario
+              name:
+                type: string
+                description: Nome do usuario
       responses:
         201:
-          description: Sucesso ao criar
+          description: Sucesso ao criar usuario
 
-  /clientes/{lname}:
+  /users/watched/{login}:
     get:
-      operationId: clientes.read_one
+      operationId: users.read_watched
       tags:
-        - Clientes
-      summary: Leitura de uma pessoa da lista de Clientes
-      description: Leitura de uma pessoa
+        - Users
+      summary: Leitura dos filmes assistidos por um usuario
+      description: Leitura dos filmes assistidos por um usuario
       parameters:
-        - name: lname
+        - name: login
           in: path
-          description: Ultimo nome
+          description: Login do usuario
           type: string
           required: True
       responses:
         200:
-          description: Sucesso na leitura de uma pessoa
-          schema:
-            properties:
-              fname:
-                type: string
-              lname:
-                type: string
-              timestamp:
-                type: string
+          description: Sucesso na leitura dos detalhes
 
-    put:
-      operationId: clientes.update
+  /users/{login}:
+    get:
+      operationId: users.read_one
       tags:
-        - Clientes
-      summary: Update na lista de Clientes
-      description: Update na lista
+        - Users
+      summary: Leitura de um usuario da lista de Usuarios
+      description: Leitura de um usuario
       parameters:
-        - name: lname
+        - name: login
           in: path
-          description: Ultimo nome
+          description: Login do usuario
           type: string
           required: True
-        - name: person
+      responses:
+        200:
+          description: Sucesso na leitura de um usuario
+
+    put:
+      operationId: users.update_all
+      tags:
+        - Users
+      summary: Update nos dados de um usuario da lista de Usuarios
+      description: Update nos dados de um usuario da lista de Usuarios
+      parameters:
+        - name: login
+          in: path
+          description: Login do usuario
+          type: string
+          required: True
+        - name: user
           in: body
           schema:
             type: object
             properties:
-              fname:
+              login:
                 type: string
-              lname:
+              password:
+                type: string
+              name:
                 type: string
       responses:
         200:
-          description: Sucesso ao atualizar
+          description: Sucesso ao atualizar usuario
 
     delete:
-      operationId: clientes.delete
+      operationId: users.delete
       tags:
-        - Clientes
-      summary: Deletar uma pessoa na lista de Clientes
-      description: Deleta uma pessoa
+        - Users
+      summary: Deletar um usuario da lista de Usuários
+      description: Deleta um usuario
       parameters:
-        - name: lname
+        - name: login
           in: path
           type: string
           required: True
       responses:
         200:
           description: Sucesso ao deletar
+
+  /users/watched/{login}/{movie_name}:
+    get:
+      operationId: users.watched_movie
+      tags:
+        - Users
+      summary: Atualizar lista de watched movies
+      description: Enviar uma mensagem para o microservice de movies atualizando o numero de views e requerendo os dados do filme assistido 
+      parameters:
+        - name: login
+          in: path
+          description: Login do usuario
+          type: string
+          required: True
+        - name: movie_name
+          in: path
+          description: Nome do filme
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso no envio da mensagem
+
+  /users/liked/{login}/{movie_name}:
+    get:
+      operationId: users.liked_movie
+      tags:
+        - Users
+      summary: Atualizar lista de liked movies
+      description: Enviar uma mensagem para o microservice de movies requerendo os dados do filme que gostou 
+      parameters:
+        - name: login
+          in: path
+          description: Login do usuario
+          type: string
+          required: True
+        - name: movie_name
+          in: path
+          description: Nome do filme
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso no envio da mensagem
+
+  /users/liked/{login}:
+    get:
+      operationId: users.read_liked
+      tags:
+        - Users
+      summary: Listar liked movies
+      description: Listar liked movies
+      parameters:
+        - name: login
+          in: path
+          description: Login do usuario
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso no envio da mensagem
+
+  /users/toWatch/{login}/{movie_name}:
+    get:
+      operationId: users.to_watch_movie
+      tags:
+        - Users
+      summary: Atualizar lista de filmes para assistir no futuro
+      description: Enviar uma mensagem para o microservice de movies requerendo os dados do filme que pretende assistir no futuro 
+      parameters:
+        - name: login
+          in: path
+          description: Login do usuario
+          type: string
+          required: True
+        - name: movie_name
+          in: path
+          description: Nome do filme
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso no envio da mensagem
+
+  /users/toWatch/{login}:
+    get:
+      operationId: users.read_to_watch_movies
+      tags:
+        - Users
+      summary: Listar movies que pretende assistir no futuro
+      description: Listar movies que pretende assistir no futuro
+      parameters:
+        - name: login
+          in: path
+          description: Login do usuario
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso no envio da mensagem
+ 

@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   description: Swagger file
   version: "1.0.0"
-  title: Swagger ReST Clientes
+  title: Swagger ReST ServiceDesk
 consumes:
   - application/json
 produces:
@@ -11,113 +11,94 @@ produces:
 basePath: /api
 
 paths:
-  /clientes:
+  /tickets:
     get:
-      operationId: clientes.read_all
+      operationId: serviceDesk.read_all
       tags:
-        - Clientes
-      summary: Lista de Clientes
-      description: Lista de Clientes
+        - Chamados
+      summary: Lista de Chamados
+      description: Lista de Chamados
       responses:
         200:
-          description: Sucesso na leitura de Clientes
+          description: Sucesso na leitura de Chamados
           schema:
             type: array
             items:
               properties:
-                fname:
+                title:
                   type: string
-                lname:
+                description:
                   type: string
-                timestamp:
+                user:
                   type: string
 
 
     post:
-      operationId: clientes.create
+      operationId: serviceDesk.create
       tags:
-        - Clientes
-      summary: Cria uma pessoa e adiciona na lista de Clientes
-      description: Adiciona na lista de Clientes
+        - Chamados
+      summary: Cria um chamado e adiciona na lista de Chamados
+      description: Adiciona na lista de Chamados
       parameters:
-        - name: person
+        - name: ticket
           in: body
-          description: Pessoa a ser criada
+          description: Chamado a ser criado
           required: True
           schema:
             type: object
             properties:
-              fname:
+              title:
                 type: string
-                description: Primeiro nome
-              lname:
+                description: Titulo do chamado
+              description:
                 type: string
-                description: Ultimo nome
+                description: Descricao do chamado
+              user:
+                type: string
+                description: Usuario do chamado
       responses:
         201:
-          description: Sucesso ao criar
-
-  /clientes/{lname}:
-    get:
-      operationId: clientes.read_one
-      tags:
-        - Clientes
-      summary: Leitura de uma pessoa da lista de Clientes
-      description: Leitura de uma pessoa
-      parameters:
-        - name: lname
-          in: path
-          description: Ultimo nome
-          type: string
-          required: True
-      responses:
-        200:
-          description: Sucesso na leitura de uma pessoa
-          schema:
-            properties:
-              fname:
-                type: string
-              lname:
-                type: string
-              timestamp:
-                type: string
-
+          description: Sucesso ao criar o chamado
+  
+  /tickets/{title}:
     put:
-      operationId: clientes.update
+      operationId: serviceDesk.update
       tags:
-        - Clientes
-      summary: Update na lista de Clientes
+        - Chamados
+      summary: Update na lista de Chamados
       description: Update na lista
       parameters:
-        - name: lname
+        - name: title
           in: path
-          description: Ultimo nome
+          description: Titulo do chamado
           type: string
           required: True
-        - name: person
+        - name: ticket
           in: body
           schema:
             type: object
             properties:
-              fname:
+              title:
                 type: string
-              lname:
+              description:
+                type: string
+              user:
                 type: string
       responses:
         200:
-          description: Sucesso ao atualizar
+          description: Sucesso ao atualizar o chamado
 
     delete:
-      operationId: clientes.delete
+      operationId: serviceDesk.delete
       tags:
-        - Clientes
-      summary: Deletar uma pessoa na lista de Clientes
-      description: Deleta uma pessoa
+        - Chamados
+      summary: Deletar um chamado na lista de Chamados
+      description: Deleta uma chamados
       parameters:
-        - name: lname
+        - name: title
           in: path
           type: string
           required: True
       responses:
         200:
-          description: Sucesso ao deletar
+          description: Sucesso ao deletar o chamado

@@ -1,0 +1,53 @@
+version: '3'
+services:
+  kafka:
+    image: spotify/kafka
+    container_name: kafka
+    network_mode: "host"
+    ports:
+      - 9092:9092
+      - 2181:2181
+    environment:
+      - "ADVERTISED_HOST=0.0.0.0"
+      - "ADVERTISED_PORT=9092"
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    network_mode: "host"
+    ports:
+      - 27017:27017
+    restart: on-failure
+
+  movies:
+    image: thiagoromanelli/movies:latest
+    container_name: movies
+    network_mode: "host"
+    ports:
+      - 5000:5000
+    restart: on-failure
+    depends_on:
+      - kafka
+      - mongodb
+
+  # serviceDesk:
+  #   image: thiagoromanelli/serviceDesk:latest
+  #   container_name: serviceDesk
+  #   network_mode: "host"
+  #   ports:
+  #     - 5001:5001
+  #   restart: on-failure
+  #   depends_on:
+  #     - kafka
+  #     - mongodb
+
+  # users:
+  #   image: thiagoromanelli/users:latest
+  #   container_name: users
+  #   network_mode: "host"
+  #   ports:
+  #     - 5002:5002
+  #   restart: on-failure
+  #   depends_on:
+  #     - kafka
+  #     - mongodb

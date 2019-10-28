@@ -4,92 +4,83 @@ from flask import jsonify, make_response, abort
 from pymongo import MongoClient
 
 client = MongoClient("mongodb://localhost:27017/") # Local
-db = client.clientes
+db = client.ticket
 
 def get_dict_from_mongodb():
-    itens_db = db.clientes.find()
-    PEOPLE = {}
+    itens_db = db.ticket.find()
+    TICKET = {}
     for i in itens_db:
             i.pop('_id') # retira id: criado automaticamente 
             item = dict(i)
-            PEOPLE[item["lname"]] = (i)
-    return PEOPLE
+            TICKET[item["title"]] = (i)
+    return TICKET
 
 def get_timestamp():
     return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
 
 def read_all():
-    PEOPLE = get_dict_from_mongodb()
-    dict_clientes = [PEOPLE[key] for key in sorted(PEOPLE.keys())]
-    clientes = jsonify(dict_clientes)
-    qtd = len(dict_clientes)
-    content_range = "clientes 0-"+str(qtd)+"/"+str(qtd)
+    TICKET = get_dict_from_mongodb()
+    dict_ticket = [TICKET[key] for key in sorted(TICKET.keys())]
+    ticket = jsonify(dict_ticket)
+    qtd = len(dict_ticket)
+    content_range = "ticket 0-"+str(qtd)+"/"+str(qtd)
     # Configura headers
-    clientes.headers['Access-Control-Allow-Origin'] = '*'
-    clientes.headers['Access-Control-Expose-Headers'] = 'Content-Range'
-    clientes.headers['Content-Range'] = content_range
-    return clientes
+    ticket.headers['Access-Control-Allow-Origin'] = '*'
+    ticket.headers['Access-Control-Expose-Headers'] = 'Content-Range'
+    ticket.headers['Content-Range'] = content_range
+    return ticket
 
 
-def read_one(lname):
-    PEOPLE = get_dict_from_mongodb()
-    if lname in PEOPLE:
-        person = PEOPLE.get(lname)
-    else:
-        abort(
-            404, "Pessoa com sobrenome {lname} nao encontrada".format(lname=lname)
-        )
-    return person
-
-
-def create(person):
-    lname = person.get("lname", None)
-    fname = person.get("fname", None)
-    PEOPLE = get_dict_from_mongodb()
-    if lname not in PEOPLE and lname is not None:
+def create(ticket):
+    title = ticket.get("title", None)
+    description = ticket.get("description", None)
+    user = ticket.get("user", None)
+    TICKET = get_dict_from_mongodb()
+    if title not in TICKET and title is not None:
         item = {
-            "lname": lname,
-            "fname": fname,
+            "title": title,
+            "description": description,
+            "user": user,
             "timestamp": get_timestamp(),
         }
-        db.clientes.insert_one(item)
+        db.ticket.insert_one(item)
         return make_response(
-            "{lname} criado com sucesso".format(lname=lname), 201
+            "Ticket aberto com sucesso", 201
         )
     else:
         abort(
             406,
-            "Pessoa com sobrenome {lname} ja existe".format(lname=lname),
+            "Ticket existente"
         )
 
-
-def update(lname, person):
-    query = { "lname": lname }
+def update(title, ticket):
+    query = { "title": title }
     update = { "$set": {
-            "lname": lname,
-            "fname": person.get("fname"),
+            "title": ticket.get("title"),
+            "description": ticket.get("description"),
+            "user":ticket.get("user"),
             "timestamp": get_timestamp(), } 
         }
-    PEOPLE = get_dict_from_mongodb()
+    TICKET = get_dict_from_mongodb()
 
-    if lname in PEOPLE:
-        db.clientes.update_one(query, update)
-        PEOPLE = get_dict_from_mongodb()
-        return PEOPLE[lname]
+    if title in TICKET:
+        db.ticket.update_one(query, update)
+        TICKET = get_dict_from_mongodb()
+        return TICKET[title]
     else:
         abort(
-            404, "Pessoa com sobrenome {lname} nao encontrada".format(lname=lname)
+            404, "Ticket nao encontrado"
         )
 
-def delete(lname):
-    query = { "lname": lname }
-    PEOPLE = get_dict_from_mongodb()
-    if lname in PEOPLE:
-        db.clientes.delete_one(query)
+def delete(title):
+    query = { "title": title }
+    TICKET = get_dict_from_mongodb()
+    if title in TICKET:
+        db.ticket.delete_one(query)
         return make_response(
-            "{lname} deletado com sucesso".format(lname=lname), 200
+            "Ticket deletado com sucesso", 200
         )
     else:
         abort(
-            404, "Pessoa com sobrenome {lname} nao encontrada".format(lname=lname)
+            404, "Ticket nao encontrado"
         )

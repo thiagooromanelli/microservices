@@ -31,10 +31,12 @@ paths:
                   type: string
                 genre:
                   type: string
-                viwes:
+                views:
                   type: integer
-                keyword:
+                keywords:
                   type: array
+                  items:
+                    type: string
                 timestamp:
                   type: string
 
@@ -61,11 +63,10 @@ paths:
               genre:
                 type: string
                 description: Genero do filme
-              viwes:
-                type: integer
-                description: Visualizaçoes do filme
-              keyword:
+              keywords:
                 type: array
+                items:
+                  type: string
                 description: Palavras-chave do filme
       responses:
         201:
@@ -125,10 +126,14 @@ paths:
                 type: string
               genre:
                 type: string
-              viwes:
+              views:
                 type: integer
-              keyword:
+              keywords:
                 type: array
+                items:
+                  type: string
+              timestamp:
+                type: string
       responses:
         200:
           description: Sucesso ao atualizar filme
@@ -147,3 +152,130 @@ paths:
       responses:
         200:
           description: Sucesso ao deletar filme
+
+  /movies/genre/{genre}:
+    get:
+      operationId: movies.read_all_by_genre
+      tags:
+        - Filmes
+      summary: Lista de Filmes por genero
+      description: Lista de Filmes por genero
+      parameters:
+        - name: genre
+          in: path
+          description: Genero do filme
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso na leitura de Filmes
+          schema:
+            type: array
+            items:
+              properties:
+                movie_name:
+                  type: string
+                details:
+                  type: string
+                genre:
+                  type: string
+                views:
+                  type: integer
+                keywords:
+                  type: array
+                  items:
+                    type: string
+                timestamp:
+                  type: string
+
+  /movies/genre/mostViewed/{genre}:
+    get:
+      operationId: movies.read_all_by_most_viewed
+      tags:
+        - Filmes
+      summary: Lista de Filmes mais visualizados
+      description: Lista de Filmes mais visualizados
+      parameters:
+        - name: genre
+          in: path
+          description: Genero do filme
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso na leitura de Filmes
+          schema:
+            type: array
+            items:
+              properties:
+                movie_name:
+                  type: string
+                details:
+                  type: string
+                genre:
+                  type: string
+                views:
+                  type: integer
+                keywords:
+                  type: array
+                  items:
+                    type: string
+                timestamp:
+                  type: string
+  
+  /movies/details/{movie_name}:
+    get:
+      operationId: movies.read_movie_details
+      tags:
+        - Filmes
+      summary: Leitura dos detalhes de um filme da lista
+      description: Leitura dos detalhes de um filme
+      parameters:
+        - name: movie_name
+          in: path
+          description: Nome do filme
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso na leitura dos detalhes
+
+  /movies/keyword/{keyword}:
+    get:
+      operationId: movies.read_all_by_keyword
+      tags:
+        - Filmes
+      summary: Lista de Filmes por keyword
+      description: Lista de Filmes por keyword
+      parameters:
+        - name: keyword
+          in: path
+          description: Keyword do filme
+          type: string
+          required: True
+      responses:
+        200:
+          description: Sucesso na leitura de Filmes
+          schema:
+            type: array
+            items:
+              properties:
+                movie_name:
+                  type: string
+                details:
+                  type: string
+                genre:
+                  type: string
+                views:
+                  type: integer
+                keywords:
+                  type: array
+                  items:
+                    type: string
+                timestamp:
+                  type: string
+
+
+
+
+          
