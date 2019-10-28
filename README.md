@@ -1,4 +1,4 @@
-# TCD - Services Architecture / API / Mobile Architecture
+# Services Architecture / API / Mobile Architecture
 
 Repositorio dedicado ao trabalho de conclusao de disciplina.
 Foi escolhido o modelo do Netflix para desenvolvimento dos microservices.
