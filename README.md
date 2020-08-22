@@ -1,8 +1,9 @@
 # Services Architecture / API / Mobile Architecture
 
-Repositorio dedicado ao trabalho de conclusao de disciplina.
-Foi escolhido o modelo do Netflix para desenvolvimento dos microservices.
+## Sobre
+Projeto que simula uma arquitetura da Netflix com o objetivo de fixar aprendizado no desenvolvimento de microservices.
 
+## Detalhes
 Todos os microservices foram desenvolvidos em Python e o banco de dados escolhido foi o MongoDB.
 
 A aplicacao esta dividida em 3 microservices: Movies, Users e ServiceDesk
